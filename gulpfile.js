@@ -74,7 +74,7 @@ gulp.task('publish-css', function () {
             }))
             .pipe(less())
             .pipe(autoprefixer({
-                browsers:['last 1 version','> 1%','ie 10']
+                browsers:['last 1 version','> 1%','ie 10']//https://browserl.ist/?q=last+4+versions  通过这个可查询browsers参数所支持的浏览器
             }))
     )
         .pipe(concat('bundle.css'))
