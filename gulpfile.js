@@ -1,6 +1,8 @@
 'use strict';
 
-var autoprefixer = require('gulp-autoprefixer');
+var autoprefixer = require('gulp-autoprefixer');//自动补齐前缀
+//传送门：https://github.com/sindresorhus/gulp-autoprefixer
+//gulp-autoprefixer的browsers参数：https://github.com/browserslist/browserslist
 var browserify = require('gulp-browserify');
 var browserSync = require('browser-sync').create();
 var concat = require('gulp-concat');
@@ -71,7 +73,9 @@ gulp.task('publish-css', function () {
                 errorHandler: errorAlert
             }))
             .pipe(less())
-            .pipe(autoprefixer())
+            .pipe(autoprefixer({
+                browsers:['last 1 version','> 1%','ie 10']
+            }))
     )
         .pipe(concat('bundle.css'))
         .pipe(gulp.dest('app/dist/stylesheets'))
