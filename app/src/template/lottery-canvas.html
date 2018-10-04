@@ -64,16 +64,22 @@
 
         lottery.addEventListener("mousemove",mousemove,false);
 
-        lottery.addEventListener("mouseup",mouseup,false)
+        lottery.addEventListener("mouseup",mouseup,false);
+        lottery.addEventListener('touchstart',mousedown,false);
+        lottery.addEventListener("touchmove",mousemove,false);
+
+        lottery.addEventListener("touchend",mouseup,false);
 
         function mousedown(e){
+            console.log(e)
             e.preventDefault();
             isClear = true;
         };
         function mousemove(e){
+            console.log(e);
             e.preventDefault();
             if(isClear){
-                clearMongolian(e.pageX,e.pageY);
+                clearMongolian(e.pageX||e.targetTouches[0].pageX,e.pageY||e.targetTouches[0].pageY); //兼容移动端
             }
         };
         function mouseup(e){
