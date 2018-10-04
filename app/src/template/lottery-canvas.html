@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas蒙层抽奖</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<!--view层 div
+-->
+
+<div style="height: 800px;">
+    <div class="lottery" style="position: relative;">
+        <div class="lottery_desc" style="height: 100%;width: 100%;position: absolute;left: 0;top: 0">
+            <span>恭喜中奖</span>
+        </div>
+        <canvas class="lottery_mongolian" style="height: 100%;width: 100%;position: absolute;left: 0;top: 0">您的设备不支持canvas</canvas>
+    </div>
+</div>
+
+
+</body>
+<script>
+
+    window.onload = function(){
+        /*
+        * 定义全局变量
+        * */
+
+        var isClear = false;
+        /*
+         * 初始化画布
+         * */
+        var lottery = document.querySelector('.lottery_mongolian')
+        lottery.height = lottery.clientHeight;lottery.width = lottery.clientWidth; //设置画布大小与元素大小一样
+        var ctx = lottery.getContext('2d');
+
+        /*
+        * 设置蒙层
+        * */
+        ctx.fillStyle = "#c0c0c0";
+        ctx.fillRect(0,0,lottery.width,lottery.height);
+
+        /*
+         *清除蒙层
+         * 1设置橡皮擦
+         * */
+        function clearMongolian(pagex,pagey){
+            canvasX = lottery.getBoundingClientRect().left+window.pageXOffset;
+            canvasY = lottery.getBoundingClientRect().top + window.pageYOffset;
+            var x = pagex - canvasX-1;
+            var y = pagey - canvasY-1;
+            ctx.globalCompositeOperation="destination-out"
+            ctx.beginPath();
+            ctx.arc(x+4,y+4,6,0,Math.PI*2);
+            //下面3行代码是为了修复部分手机浏览器不支持destination-out
+            //我也不是很清楚这样做的原理是什么（来源于网络，先占个坑）
+//            lottery.style.display = 'none';
+//            lottery.offsetHeight;
+//            lottery.style.display = 'inherit';
+            ctx.fill();
+        }
+        lottery.addEventListener("mousedown",mousedown,false);
+
+        lottery.addEventListener("mousemove",mousemove,false);
+
+        lottery.addEventListener("mouseup",mouseup,false)
+
+        function mousedown(e){
+            e.preventDefault();
+            isClear = true;
+        };
+        function mousemove(e){
+            e.preventDefault();
+            if(isClear){
+                clearMongolian(e.pageX,e.pageY);
+            }
+        };
+        function mouseup(e){
+            e.preventDefault();
+            isClear = false;
+            data = ctx.getImageData(0,0,lottery.width,lottery.height).data;//获取canvas的所有像素点数据
+            for (var i=0,j=0;i<data.length;i+=4){
+                if(data[i]&&data[i+1]&&data[i+2]&&data[i+3]){
+
+                    j++;
+                }
+            }
+            if(j<lottery.width*lottery.height*0.7){  //判断像素点，进行清零
+                ctx.clearRect(0,0,lottery.width,lottery.height);
+                document.querySelector('.lottery_desc').style.zIndex = 999;
+            }
+        }
+
+    }
+</script>
+</html>

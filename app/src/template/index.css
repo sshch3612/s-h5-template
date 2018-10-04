@@ -1,0 +1,6 @@
+.lottery{
+    display: inline-block;
+    height: 100px;width:220px;
+    border:1px solid #ffff00;
+    color:#c0c0c0;
+}
